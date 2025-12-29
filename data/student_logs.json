@@ -1,0 +1,9 @@
+[
+  {
+    "student_id": 1,
+    "score": 55,
+    "attempts": 3,
+    "time_spent": 180,
+    "emotion_indicator": "high"
+  }
+]

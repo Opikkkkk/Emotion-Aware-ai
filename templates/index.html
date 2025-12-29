@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI–AR Adaptive Learning</title>
+</head>
+<body>
+    <h1>Emotion-Aware AI–AR Learning</h1>
+
+    <form method="post">
+        Nilai: <input type="number" name="score"><br>
+        Percobaan: <input type="number" name="attempts"><br>
+        Gaya Belajar:
+        <select name="style">
+            <option>Visual</option>
+            <option>Auditori</option>
+            <option>Kinestetik</option>
+        </select><br>
+        <button type="submit">Proses</button>
+    </form>
+
+    {% if result %}
+        <h2>Hasil Adaptif</h2>
+        <p>{{ result.feedback }}</p>
+
+        <h3>AR Visualisasi</h3>
+        <p>{{ ar.description }}</p>
+    {% endif %}
+</body>
+</html>

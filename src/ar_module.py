@@ -1,11 +1,22 @@
+# ar_module.py
+
 def get_ar_content(materi):
-    if materi == "Geometri":
+    # Logika sederhana penentuan objek 3D
+    if "Geometri" in materi:
         return {
-            "object": "cube.glb",
-            "description": "Visualisasi kubus 3D menggunakan AR"
+            "object_file": "cube.glb",
+            "description": "Visualisasi Kubus 3D (AR Interactable)",
+            "type": "3D Model"
+        }
+    elif "Aljabar" in materi:
+        return {
+            "object_file": "graph.glb",
+            "description": "Visualisasi Grafik Fungsi Linear",
+            "type": "Graph"
         }
     else:
         return {
-            "object": "graph.glb",
-            "description": "Visualisasi grafik fungsi sederhana"
+            "object_file": "star.glb",
+            "description": "Bintang Penghargaan (Visualisasi Default)",
+            "type": "Reward"
         }

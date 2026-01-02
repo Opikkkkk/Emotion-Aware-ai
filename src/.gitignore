@@ -1,0 +1,15 @@
+
+__pycache__/
+*.pyc
+
+# Abaikan database/log lokal 
+data/student_logs.json
+
+# Abaikan folder environment
+env/
+venv/
+.env
+
+# Abaikan fie OS
+.DS_Store
+Thumbs.db

@@ -1,29 +1,248 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>AI–AR Adaptive Learning</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emotion-Aware Adaptive Learning</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 48px 40px;
+      max-width: 480px;
+      width: 100%;
+      backdrop-filter: blur(10px);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 40px;
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+    }
+
+    h1 {
+      color: #2d3748;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #718096;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      color: #4a5568;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 15px;
+      color: #2d3748;
+      background: white;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    input::placeholder {
+      color: #a0aec0;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a5568' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    select option[value=""] {
+      color: #a0aec0;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .style-options {
+      display: grid;
+      gap: 12px;
+    }
+
+    .style-card {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .style-card:hover {
+      border-color: #667eea;
+      background: #f7fafc;
+    }
+
+    .style-card input[type="radio"] {
+      width: auto;
+      margin-right: 12px;
+      accent-color: #667eea;
+    }
+
+    .style-info {
+      flex: 1;
+    }
+
+    .style-name {
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 4px;
+    }
+
+    .style-desc {
+      font-size: 13px;
+      color: #718096;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 32px 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>Emotion-Aware AI–AR Learning</h1>
+  <div class="container">
+    <div class="header">
+      <div class="icon">🧠</div>
+      <h1>Emotion-Aware Adaptive Learning</h1>
+      <p class="subtitle">Mari mulai perjalanan belajar yang menyenangkan</p>
+    </div>
 
-    <form method="post">
-        Nilai: <input type="number" name="score"><br>
-        Percobaan: <input type="number" name="attempts"><br>
-        Gaya Belajar:
-        <select name="style">
-            <option>Visual</option>
-            <option>Auditori</option>
-            <option>Kinestetik</option>
-        </select><br>
-        <button type="submit">Proses</button>
+    <form method="POST" action="{{ url_for('student.start') }}">
+      <div class="form-group">
+        <label for="name">Nama Panggilan</label>
+        <input 
+          type="text" 
+          id="name" 
+          name="name" 
+          placeholder="Masukkan nama panggilanmu" 
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="grade">Tingkat Kelas</label>
+        <select id="grade" name="grade" required>
+          <option value="">Pilih tingkat kelas</option>
+          <option value="SD">SD (Sekolah Dasar)</option>
+          <option value="SMP">SMP (Sekolah Menengah Pertama)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Gaya Belajar</label>
+        <div class="style-options">
+          <label class="style-card">
+            <input type="radio" name="style" value="visual" required>
+            <div class="style-info">
+              <div class="style-name">👁️ Visual</div>
+              <div class="style-desc">Belajar dengan gambar dan diagram</div>
+            </div>
+          </label>
+
+          <label class="style-card">
+            <input type="radio" name="style" value="auditory" required>
+            <div class="style-info">
+              <div class="style-name">👂 Auditori</div>
+              <div class="style-desc">Belajar dengan mendengar</div>
+            </div>
+          </label>
+
+          <label class="style-card">
+            <input type="radio" name="style" value="kinesthetic" required>
+            <div class="style-info">
+              <div class="style-name">✋ Kinestetik</div>
+              <div class="style-desc">Belajar dengan praktik langsung</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <button type="submit">Mulai Belajar 🚀</button>
     </form>
-
-    {% if result %}
-        <h2>Hasil Adaptif</h2>
-        <p>{{ result.feedback }}</p>
-
-        <h3>AR Visualisasi</h3>
-        <p>{{ ar.description }}</p>
-    {% endif %}
+  </div>
 </body>
 </html>

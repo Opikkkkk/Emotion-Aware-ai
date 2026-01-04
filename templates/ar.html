@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Visualization</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .top-overlay {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 28px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            max-width: 90%;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .ar-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2d3748;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .ar-icon {
+            font-size: 24px;
+        }
+
+        .ar-description {
+            color: #4a5568;
+            font-size: 14px;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .instruction {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .instruction-icon {
+            font-size: 18px;
+        }
+
+        .controls-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            gap: 12px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .btn {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-exit {
+            background: rgba(255, 255, 255, 0.95);
+            color: #e53e3e;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-exit:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-info {
+            background: rgba(102, 126, 234, 0.95);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-info:hover {
+            background: rgba(102, 126, 234, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+        }
+
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #48bb78;
+            animation: blink 1.5s ease infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .status-text {
+            color: #2d3748;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .help-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 500px;
+            width: 90%;
+            display: none;
+        }
+
+        .help-modal.active {
+            display: block;
+            animation: modalAppear 0.3s ease;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            display: none;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            color: #2d3748;
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #718096;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #f7fafc;
+            color: #2d3748;
+        }
+
+        .help-content {
+            color: #4a5568;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .help-step {
+            background: #f7fafc;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .help-step-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 6px;
+        }
+
+        .marker-preview {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+
+        .marker-preview img {
+            max-width: 150px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .top-overlay {
+                padding: 16px 20px;
+                max-width: 95%;
+            }
+
+            .ar-title {
+                font-size: 16px;
+            }
+
+            .controls-panel {
+                flex-direction: column;
+                width: 90%;
+            }
+
+            .btn {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .help-modal {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+
+    <div class="top-overlay">
+        <div class="ar-title">
+            <span class="ar-icon">🎯</span>
+            <span>Mode AR Aktif</span>
+        </div>
+        <div class="ar-description">
+            <strong>Materi:</strong> {{ ar.description }}
+        </div>
+        <div class="instruction">
+            <span class="instruction-icon">📸</span>
+            <span>Arahkan kamera ke <strong>Hiro Marker</strong></span>
+        </div>
+    </div>
+
+    <div class="status-indicator">
+        <div class="status-dot"></div>
+        <div class="status-text">AR Active</div>
+    </div>
+
+    <div class="controls-panel">
+        <button class="btn btn-info" onclick="showHelp()">
+            <span>❓</span>
+            <span>Bantuan</span>
+        </button>
+        <a href="/" class="btn btn-exit">
+            <span>✕</span>
+            <span>Keluar AR</span>
+        </a>
+    </div>
+
+    <div class="help-modal" id="helpModal">
+        <div class="modal-header">
+            <div class="modal-title">
+                <span>📖</span>
+                <span>Panduan AR</span>
+            </div>
+            <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+        <div class="help-content">
+            <div class="help-step">
+                <div class="help-step-title">1. Izinkan Akses Kamera</div>
+                <div>Pastikan browser memiliki izin untuk menggunakan kamera</div>
+            </div>
+            <div class="help-step">
+                <div class="help-step-title">2. Unduh Hiro Marker</div>
+                <div>Download dan cetak marker Hiro dari AR.js</div>
+            </div>
+            <div class="help-step">
+                <div class="help-step-title">3. Arahkan Kamera</div>
+                <div>Tempelkan marker ke permukaan datar dan arahkan kamera</div>
+            </div>
+            <div class="help-step">
+                <div class="help-step-title">4. Lihat Visualisasi 3D</div>
+                <div>Objek 3D akan muncul di atas marker</div>
+            </div>
+            <div class="marker-preview">
+                <p style="font-weight: 600; margin-bottom: 12px; color: #2d3748;">Contoh Hiro Marker:</p>
+                <div style="width: 150px; height: 150px; margin: 0 auto; background: white; border: 2px solid #667eea; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 48px;">
+                    🎯
+                </div>
+                <p style="font-size: 12px; color: #718096; margin-top: 8px;">Gunakan marker Hiro standar</p>
+            </div>
+        </div>
+    </div>
+
+    <a-scene embedded arjs>
+        <a-marker preset="hiro">
+            {% if 'Geometri' in ar.description or 'Kubus' in ar.description %}
+                <a-box position="0 0.5 0" 
+                       material="color: #667eea; opacity: 0.9; transparent: true; metalness: 0.5"
+                       animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear"
+                       animation__scale="property: scale; dir: alternate; dur: 2000; to: 1.2 1.2 1.2; loop: true; easing: easeInOutSine">
+                </a-box>
+                <a-box position="0 0.5 0" 
+                       scale="1.1 1.1 1.1"
+                       material="color: #764ba2; opacity: 0.3; transparent: true; wireframe: true"
+                       animation="property: rotation; to: 0 -360 0; loop: true; dur: 7000; easing: linear">
+                </a-box>
+            
+            {% elif 'Aljabar' in ar.description or 'Grafik' in ar.description %}
+                <a-cone position="0 0.5 0" 
+                        radius-bottom="0.5" 
+                        radius-top="0" 
+                        height="1.5" 
+                        color="#667eea"
+                        material="metalness: 0.6; roughness: 0.4"
+                        animation="property: scale; dir: alternate; dur: 1500; to: 1.15 1.15 1.15; loop: true; easing: easeInOutQuad"
+                        animation__rotate="property: rotation; to: 0 360 0; loop: true; dur: 6000; easing: linear">
+                </a-cone>
+                <a-torus position="0 1.2 0" 
+                         radius="0.3" 
+                         radius-tubular="0.05" 
+                         color="#764ba2"
+                         animation="property: rotation; to: 360 0 0; loop: true; dur: 3000; easing: linear">
+                </a-torus>
+            
+            {% else %}
+                <a-sphere position="0 0.5 0" 
+                          radius="0.5" 
+                          color="#ffd700"
+                          material="metalness: 0.7; roughness: 0.3"
+                          animation="property: position; dir: alternate; dur: 2000; to: 0 0.8 0; loop: true; easing: easeInOutSine"
+                          animation__rotate="property: rotation; to: 0 360 0; loop: true; dur: 4000; easing: linear">
+                </a-sphere>
+                <a-ring position="0 0.5 0" 
+                        radius-inner="0.6" 
+                        radius-outer="0.8" 
+                        rotation="-90 0 0"
+                        color="#667eea" 
+                        material="opacity: 0.5; transparent: true"
+                        animation="property: rotation; to: -90 0 360; loop: true; dur: 5000; easing: linear">
+                </a-ring>
+            {% endif %}
+        </a-marker>
+        
+        <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+        function showHelp() {
+            document.getElementById('helpModal').classList.add('active');
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('helpModal').classList.remove('active');
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        // Keyboard shortcut to close modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

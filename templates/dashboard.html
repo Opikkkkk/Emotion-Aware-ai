@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Guru - AI Monitoring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 24px 32px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .card-stat {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .card-stat:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-stat-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .icon-blue { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .icon-green { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .icon-red { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
+
+        .card-stat h3 {
+            color: #718096;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-stat p {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-top: 8px;
+        }
+
+        .card-stat.highlight p {
+            color: #e74c3c;
+        }
+
+        .table-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .table-header h3 {
+            color: #2d3748;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .filter-btn {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            background: white;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f7fafc;
+            transform: scale(1.01);
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            text-transform: capitalize;
+        }
+
+        .badge-high {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+        }
+
+        .badge-medium {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .badge-low {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .style-tag {
+            background: #edf2f7;
+            color: #4a5568;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .score-cell {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .score-high { color: #38a169; }
+        .score-medium { color: #d69e2e; }
+        .score-low { color: #e53e3e; }
+
+        .recommendation {
+            font-size: 13px;
+            color: #718096;
+            max-width: 250px;
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 16px;
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .table-section {
+                padding: 20px;
+            }
+
+            .table-container {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 12px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h2>
+                <span>👨‍🏫</span>
+                Dashboard Monitoring Siswa
+            </h2>
+            <a href="/" class="logout-btn">Logout</a>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="card-stat">
+                <div class="card-stat-header">
+                    <div class="card-icon icon-blue">👥</div>
+                </div>
+                <h3>Total Siswa</h3>
+                <p>{{ stats.total }}</p>
+            </div>
+
+            <div class="card-stat">
+                <div class="card-stat-header">
+                    <div class="card-icon icon-green">📊</div>
+                </div>
+                <h3>Rata-rata Nilai</h3>
+                <p>{{ stats.avg }}</p>
+            </div>
+
+            <div class="card-stat highlight">
+                <div class="card-stat-header">
+                    <div class="card-icon icon-red">⚠️</div>
+                </div>
+                <h3>Siswa Cemas (Tinggi)</h3>
+                <p>{{ stats.anxiety['Tinggi'] }}</p>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <div class="table-header">
+                <h3>📋 Log Aktivitas Terkini</h3>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Gaya Belajar</th>
+                            <th>Nilai</th>
+                            <th>Percobaan</th>
+                            <th>Status Emosi</th>
+                            <th>Rekomendasi AI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs|reverse %}
+                        <tr>
+                            <td><strong>{{ log.student_name }}</strong></td>
+                            <td>{{ log.grade }}</td>
+                            <td><span class="style-tag">{{ log.style }}</span></td>
+                            <td>
+                                <span class="score-cell {% if log.score >= 80 %}score-high{% elif log.score >= 60 %}score-medium{% else %}score-low{% endif %}">
+                                    {{ log.score }}
+                                </span>
+                            </td>
+                            <td>{{ log.attempts }}x</td>
+                            <td>
+                                {% if 'Tinggi' in log.emotion %}
+                                    <span class="badge badge-high">{{ log.emotion }}</span>
+                                {% elif 'Sedang' in log.emotion %}
+                                    <span class="badge badge-medium">{{ log.emotion }}</span>
+                                {% else %}
+                                    <span class="badge badge-low">{{ log.emotion }}</span>
+                                {% endif %}
+                            </td>
+                            <td><div class="recommendation">{{ log.materi }}</div></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">📭</div>
+                                    <p>Belum ada data siswa yang tersedia.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

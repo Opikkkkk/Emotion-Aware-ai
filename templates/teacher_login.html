@@ -4,34 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Guru</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 50%, #0d47a1 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
-
-        .container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 48px 40px;
-            max-width: 440px;
+        
+        /* Animated Background Elements */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: backgroundMove 60s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .floating-shapes {
+            position: absolute;
             width: 100%;
-            backdrop-filter: blur(10px);
-            animation: slideUp 0.5s ease;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
         }
-
+        
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 25s;
+        }
+        
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 70%;
+            left: 80%;
+            animation-delay: 5s;
+            animation-duration: 30s;
+        }
+        
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            top: 40%;
+            left: 5%;
+            animation-delay: 10s;
+            animation-duration: 28s;
+        }
+        
+        .shape:nth-child(4) {
+            width: 90px;
+            height: 90px;
+            top: 20%;
+            left: 85%;
+            animation-delay: 3s;
+            animation-duration: 22s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+        
+        .login-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+        }
+        
+        .card { 
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 50px 45px;
+            border-radius: 32px;
+            text-align: center;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
         @keyframes slideUp {
             from {
                 opacity: 0;
@@ -42,258 +124,295 @@
                 transform: translateY(0);
             }
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .icon {
+        
+        .logo-container {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
             font-size: 40px;
-            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 30px rgba(33, 150, 243, 0.4);
+            animation: logoFloat 3s ease-in-out infinite;
         }
-
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
         h2 {
-            color: #2d3748;
+            color: #1565c0;
+            margin-bottom: 12px;
             font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
-
+        
         .subtitle {
-            color: #718096;
+            color: #546e7a;
             font-size: 14px;
+            margin-bottom: 35px;
+            font-weight: 500;
         }
-
-        .error-message {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-            color: white;
-            padding: 14px 18px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: shake 0.5s ease;
-            box-shadow: 0 4px 12px rgba(238, 90, 111, 0.3);
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .error-icon {
-            font-size: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
+        
+        .input-group {
             position: relative;
+            margin-bottom: 20px;
         }
-
-        .input-wrapper {
-            position: relative;
-        }
-
+        
         .input-icon {
             position: absolute;
-            left: 16px;
+            left: 18px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 20px;
-            color: #a0aec0;
+            font-size: 18px;
+            color: #90a4ae;
+            transition: all 0.3s ease;
             pointer-events: none;
         }
-
-        input[type="password"] {
+        
+        input { 
             width: 100%;
-            padding: 16px 16px 16px 50px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 16px 20px 16px 52px;
+            border: 2px solid #e3f2fd;
+            border-radius: 16px;
             font-size: 15px;
-            color: #2d3748;
-            background: white;
-            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: #263238;
+            background: #f5faff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        input::placeholder {
+            color: #90a4ae;
+            font-weight: 400;
+        }
+        
+        input:focus {
             outline: none;
+            border-color: #2196f3;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.1), 0 4px 12px rgba(33, 150, 243, 0.15);
+            transform: translateY(-2px);
         }
-
-        input[type="password"]:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        
+        input:focus + .input-icon {
+            color: #2196f3;
+            transform: translateY(-50%) scale(1.1);
         }
-
-        input[type="password"]::placeholder {
-            color: #a0aec0;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
-            color: #a0aec0;
-            transition: color 0.3s ease;
-            padding: 4px;
-        }
-
-        .toggle-password:hover {
-            color: #667eea;
-        }
-
-        button[type="submit"] {
+        
+        button { 
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
             color: white;
             border: none;
-            border-radius: 12px;
+            border-radius: 16px;
+            font-weight: 700;
             font-size: 16px;
-            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            margin-top: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(33, 150, 243, 0.4);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        button:hover::before {
+            left: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(33, 150, 243, 0.5);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        .hint-box {
+            margin-top: 25px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 16px;
+            border: 2px solid rgba(33, 150, 243, 0.2);
+        }
+        
+        .hint-box p {
+            font-size: 13px;
+            color: #1565c0;
+            font-weight: 600;
+            margin: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
-
-        button[type="submit"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
-        }
-
-        button[type="submit"]:active {
-            transform: translateY(0);
-        }
-
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 24px;
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .back-link:hover {
-            color: #764ba2;
-            transform: translateX(-4px);
-        }
-
-        .back-link::before {
-            content: "← ";
-            margin-right: 4px;
-        }
-
-        .security-note {
-            background: #f7fafc;
-            border-left: 4px solid #667eea;
-            padding: 12px 16px;
+        
+        .hint-credentials {
+            font-family: 'Courier New', monospace;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 4px 10px;
             border-radius: 8px;
-            margin-bottom: 24px;
-            font-size: 13px;
-            color: #4a5568;
+            font-weight: 700;
+            color: #1976d2;
         }
-
-        .security-note strong {
-            color: #2d3748;
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: #90a4ae;
+            font-size: 12px;
+            font-weight: 600;
         }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 32px 24px;
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e3f2fd;
+        }
+        
+        .divider span {
+            padding: 0 15px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        
+        .feature-item {
+            background: #f5faff;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #546e7a;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #e3f2fd;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 576px) {
+            .card {
+                padding: 40px 30px;
+                border-radius: 24px;
             }
-
+            
             h2 {
                 font-size: 24px;
             }
-
-            .icon {
+            
+            .logo-container {
                 width: 70px;
                 height: 70px;
                 font-size: 35px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            body {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 35px 25px;
+            }
+            
+            input {
+                padding: 14px 18px 14px 48px;
+                font-size: 14px;
+            }
+            
+            button {
+                padding: 14px;
+                font-size: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="icon">🔐</div>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    
+    <div class="login-container">
+        <div class="card">
+            <div class="logo-container">
+                👨‍🏫
+            </div>
             <h2>Login Guru</h2>
-            <p class="subtitle">Masuk ke dashboard monitoring siswa</p>
-        </div>
-
-        {% if error %}
-        <div class="error-message">
-            <span class="error-icon">⚠️</span>
-            <span>{{ error }}</span>
-        </div>
-        {% endif %}
-
-        <div class="security-note">
-            <strong>🛡️ Area Aman</strong><br>
-            Halaman ini hanya untuk guru dan administrator
-        </div>
-
-        <form method="POST">
-            <div class="form-group">
-                <div class="input-wrapper">
-                    <span class="input-icon">🔑</span>
-                    <input 
-                        type="password" 
-                        id="password"
-                        name="password" 
-                        placeholder="Masukkan password admin" 
-                        required
-                        autocomplete="current-password"
-                    >
-                    <button type="button" class="toggle-password" onclick="togglePassword()">
-                        👁️
-                    </button>
+            <p class="subtitle">Sistem Monitoring Ujian Adaptif AI</p>
+            
+            <form method="POST">
+                <div class="input-group">
+                    <input type="text" name="username" placeholder="Username" required>
+                    <span class="input-icon">👤</span>
+                </div>
+                
+                <div class="input-group">
+                    <input type="password" name="password" placeholder="Password" required>
+                    <span class="input-icon">🔒</span>
+                </div>
+                
+                <button type="submit">Masuk Dashboard</button>
+            </form>
+            
+            <div class="divider">
+                <span>DEMO ACCOUNT</span>
+            </div>
+            
+            <div class="hint-box">
+                <p>
+                    💡 
+                    <span class="hint-credentials">admin</span>
+                    /
+                    <span class="hint-credentials">admin123</span>
+                </p>
+            </div>
+            
+            <div class="features">
+                <div class="feature-item">
+                    📊 Real-time Analytics
+                </div>
+                <div class="feature-item">
+                    🤖 AI Monitoring
                 </div>
             </div>
-
-            <button type="submit">
-                <span>Masuk ke Dashboard</span>
-                <span>→</span>
-            </button>
-        </form>
-
-        <a href="/" class="back-link">Kembali ke Home</a>
+        </div>
     </div>
-
-    <script>
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleBtn = document.querySelector('.toggle-password');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                toggleBtn.textContent = '🙈';
-            } else {
-                passwordInput.type = 'password';
-                toggleBtn.textContent = '👁️';
-            }
-        }
-    </script>
 </body>
 </html>

@@ -10,7 +10,7 @@ def detect_math_anxiety(score, attempts):
         if attempts > 3:
             return "Tinggi (Frustasi)"
         else:
-            return "Sedang (Bingung)"
+            return "Sedang (Bingung)"   
     elif score < 80:
         if attempts > 3:
             return "Sedang (Berusaha)"

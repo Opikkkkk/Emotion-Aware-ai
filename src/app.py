@@ -1,137 +1,203 @@
-#app.py
-import sys
 import os
+import base64
+import cv2
+import numpy as np
 import json
-from flask import Flask, render_template, request, redirect, url_for, session
+import csv
+from datetime import datetime
+from collections import Counter
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from deepface import DeepFace
 
-# =====================
-# PATH SETUP (CRITICAL)
-# =====================
-# Pastikan Python bisa menemukan modul di folder saat ini
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# --- 1. KONFIGURASI PATH ---
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(BASE_DIR)
 
-# Setup Path Absolut untuk Data & Template
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # Naik ke root folder
-TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
-STATIC_DIR = os.path.join(BASE_DIR, "static")
-DATA_DIR = os.path.join(BASE_DIR, "data")
-LOG_FILE = os.path.join(DATA_DIR, "student_logs.json")
+TEMPLATE_DIR = os.path.join(PROJECT_ROOT, 'templates')
+STATIC_DIR = os.path.join(PROJECT_ROOT, 'static')
+DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
 
-# Buat folder data jika belum ada
-os.makedirs(DATA_DIR, exist_ok=True)
+LOG_FILE = os.path.join(DATA_DIR, 'student_logs.json')
+CSV_FILE = os.path.join(DATA_DIR, 'questions.csv')
 
-# =====================
-# IMPORTS
-# =====================
-from ai_engine import analyze_student
-from adaptive_engine import adapt_learning
-from ar_module import get_ar_content
-from routes.student_routes import student_bp
-from routes.teacher_routes import teacher_bp
+if not os.path.exists(DATA_DIR):
+    os.makedirs(DATA_DIR)
 
-# =====================
-# FLASK CONFIG
-# =====================
-app = Flask(
-    __name__,
-    template_folder=TEMPLATE_DIR,
-    static_folder=STATIC_DIR
-)
+app = Flask(__name__, template_folder=TEMPLATE_DIR, static_folder=STATIC_DIR)
+app.secret_key = 'rahasia_tubes_ai'
 
-app.secret_key = "rahasia_tubes_ai_2025" # Ganti dengan random string
-app.register_blueprint(student_bp)
-app.register_blueprint(teacher_bp)
+# --- 2. FUNGSI BANTUAN ---
 
-# =====================
-# HELPER FUNCTIONS
-# =====================
+def read_base64_image(base64_string):
+    try:
+        if ',' in base64_string:
+            base64_string = base64_string.split(',')[1]
+        decoded_data = base64.b64decode(base64_string)
+        np_data = np.frombuffer(decoded_data, np.uint8)
+        img = cv2.imdecode(np_data, cv2.IMREAD_COLOR)
+        return img
+    except Exception as e:
+        print(f"❌ Error Decode: {e}")
+        return None
+
+def load_questions():
+    questions = []
+    if os.path.exists(CSV_FILE):
+        try:
+            with open(CSV_FILE, mode='r', encoding='utf-8-sig') as f:
+                reader = csv.DictReader(f)
+                reader.fieldnames = [name.strip() for name in reader.fieldnames]
+                for row in reader:
+                    questions.append(row)
+        except Exception as e:
+            print(f"❌ Error CSV: {e}")
+    return questions
+
 def save_log(data):
     logs = []
     if os.path.exists(LOG_FILE):
         try:
-            with open(LOG_FILE, "r") as f:
-                content = f.read()
-                if content:
-                    logs = json.loads(content)
-        except json.JSONDecodeError:
-            logs = []
-
+            with open(LOG_FILE, 'r') as f:
+                logs = json.load(f)
+        except:
+            logs = [] 
     logs.append(data)
-    
-    with open(LOG_FILE, "w") as f:
-        json.dump(logs, f, indent=2)
+    with open(LOG_FILE, 'w') as f:
+        json.dump(logs, f, indent=4)
 
-# =====================
-# MAIN ROUTES
-# =====================
-@app.route("/")
+def get_logs():
+    if os.path.exists(LOG_FILE):
+        try:
+            with open(LOG_FILE, 'r') as f:
+                return json.load(f)
+        except:
+            return []
+    return []
+
+# --- 3. ROUTES ---
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    # Bersihkan session lama saat ke halaman depan
+    result = None
+    all_questions = load_questions() 
+
+    if request.method == 'POST':
+        try:
+            name = request.form.get('name')
+            grade = request.form.get('grade')
+            image_data = request.form.get('face_image')
+            
+            quiz_log = {}
+            for i in range(1, 4):
+                q = request.form.get(f'q{i}_text')
+                a = request.form.get(f'ans{i}')
+                if q: quiz_log[f"Soal {i}"] = f"{q} (Jawab: {a})"
+
+            emotion_indo = "Tidak Terdeteksi"
+            dominant_emotion = "unknown"
+            feedback_text = "Wajah tidak terlihat."
+            focus_score = 0
+
+            # PROSES AI
+            if image_data and len(image_data) > 100:
+                img = read_base64_image(image_data)
+                if img is not None:
+                    try:
+                        analysis = DeepFace.analyze(img, actions=['emotion'], enforce_detection=False)
+                        if isinstance(analysis, list): analysis = analysis[0]
+                        dominant_emotion = analysis['dominant_emotion']
+                        
+                        map_emo = {'angry':'Marah','disgust':'Jijik','fear':'Takut','happy':'Senang','sad':'Sedih','surprise':'Terkejut','neutral':'Netral'}
+                        emotion_indo = map_emo.get(dominant_emotion, dominant_emotion)
+
+                        # LOGIKA SKOR FOKUS (KECERDASAN EMOSIONAL)
+                        # Netral/Senang = Fokus Tinggi
+                        if dominant_emotion in ['neutral', 'happy']:
+                            focus_score = 95
+                            feedback_text = "Kondisi mental sangat prima. Fokus tinggi."
+                        elif dominant_emotion == 'surprise':
+                            focus_score = 80
+                            feedback_text = "Cukup fokus, namun sedikit terkejut."
+                        elif dominant_emotion in ['sad', 'fear']:
+                            focus_score = 60
+                            feedback_text = "Terdeteksi kecemasan. Perlu rileksasi."
+                        elif dominant_emotion in ['angry', 'disgust']:
+                            focus_score = 40
+                            feedback_text = "Tingkat stres tinggi. Disarankan istirahat."
+                        else:
+                            focus_score = 50
+
+                    except Exception as e:
+                        print(f"❌ Error DeepFace: {e}")
+            
+            log_entry = {
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "name": name,
+                "grade": grade,
+                "emotion": emotion_indo,
+                "raw_emotion": dominant_emotion,
+                "focus_score": focus_score, # Data baru untuk dashboard
+                "quiz_detail": quiz_log
+            }
+            save_log(log_entry)
+
+            result = {'emotion': emotion_indo, 'feedback': feedback_text, 'raw': dominant_emotion}
+
+        except Exception as e:
+            print(f"❌ Error System: {e}")
+
+    return render_template('index.html', result=result, questions_json=json.dumps(all_questions))
+
+@app.route('/teacher', methods=['GET', 'POST'])
+def teacher_login():
+    if request.method == 'POST':
+        if request.form.get('username') == 'admin' and request.form.get('password') == 'admin123':
+            session['logged_in'] = True
+            return redirect(url_for('dashboard'))
+        else:
+            flash("Login Gagal", "error")
+    return render_template('teacher_login.html')
+
+@app.route('/dashboard')
+def dashboard():
+    if not session.get('logged_in'): return redirect(url_for('teacher_login'))
+    
+    logs = get_logs()
+    
+    # --- LOGIKA ANALITIK DASHBOARD ---
+    total_students = len(logs)
+    avg_focus = 0
+    dominant_mood = "Belum ada data"
+    mood_counts = {}
+
+    if total_students > 0:
+        # 1. Hitung Rata-rata Fokus
+        total_score = sum([log.get('focus_score', 0) for log in logs])
+        avg_focus = round(total_score / total_students)
+
+        # 2. Cari Mood Dominan
+        emotions = [log.get('emotion', 'Unknown') for log in logs]
+        mood_counter = Counter(emotions)
+        dominant_mood = mood_counter.most_common(1)[0][0]
+        
+        # 3. Data untuk Grafik (Persentase)
+        for emo, count in mood_counter.items():
+            mood_counts[emo] = round((count / total_students) * 100)
+
+    stats = {
+        'total': total_students,
+        'avg_focus': avg_focus,
+        'dominant_mood': dominant_mood,
+        'mood_percent': mood_counts
+    }
+
+    logs.reverse()
+    return render_template('dashboard.html', logs=logs, stats=stats)
+
+@app.route('/logout')
+def logout():
     session.clear()
-    return render_template("index.html")
+    return redirect(url_for('teacher_login'))
 
-@app.route("/submit", methods=["POST"])
-def submit():
-    if "student" not in session:
-        return redirect(url_for("index"))
-
-    try:
-        score = int(request.form["score"])
-        attempts = int(request.form["attempts"])
-    except ValueError:
-        return redirect(url_for("student.learn")) # Error handling jika input kosong
-
-    student = session["student"]
-
-    # 1. AI Engine: Analisis Performa & Emosi
-    ai_result = analyze_student(score, attempts)
-
-    # 2. Adaptive Engine: Tentukan Materi Selanjutnya
-    adaptive_result = adapt_learning(ai_result, student["style"])
-
-    # 3. AR Module: Tentukan Konten Visual
-    ar_content = get_ar_content(adaptive_result["materi"])
-
-    # 4. Bungkus Hasil untuk Session & Log
-    session["result"] = {
-        "score": score,
-        "attempts": attempts,
-        "understanding": ai_result["level"],       # Level (Dasar/Menengah/Lanjut)
-        "emotion": ai_result["emotion"],           # Emosi (Cemas/Percaya Diri)
-        "materi": adaptive_result["materi"],       # Materi selanjutnya
-        "recommendation": adaptive_result["recommendation"], # Saran belajar
-        "ar": ar_content                           # Data objek AR
-    }
-
-    # 5. Simpan Log (Database JSON)
-    log_data = {
-        "student_name": student["name"],
-        "grade": student["grade"],
-        "style": student["style"],
-        **session["result"]
-    }
-    save_log(log_data)
-
-    return redirect(url_for("result"))
-
-@app.route("/result")
-def result():
-    if "result" not in session:
-        return redirect(url_for("index"))
-    
-    return render_template("result.html", result=session["result"])
-
-@app.route("/ar")
-def ar():
-    if "result" not in session:
-        return redirect(url_for("index"))
-    
-    return render_template("ar.html", ar=session["result"]["ar"])
-
-# =====================
-# RUNNER
-# =====================
-if __name__ == "__main__":
-    print(f"🚀 Server berjalan. Buka: http://127.0.0.1:5000")
-    print(f"📂 Menggunakan folder data di: {DATA_DIR}")
-    app.run(debug=True, port=5000)
+if __name__ == '__main__':
+    app.run(debug=True)

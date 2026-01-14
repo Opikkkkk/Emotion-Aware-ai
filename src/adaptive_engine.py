@@ -12,7 +12,7 @@ def adapt_learning(ai_result, learning_style):
         materi = "Aljabar Linear"
         saran = "Pemahamanmu cukup baik, coba selesaikan variasi soal ini."
     else:
-        materi = "Kalkulus Pengantar" # Contoh SMP tingkat lanjut
+        materi = "Kalkulus Pengantar" 
         saran = "Luar biasa! Kamu siap untuk tantangan logika yang lebih kompleks."
 
     # Personalisasi berdasarkan gaya belajar
@@ -26,5 +26,5 @@ def adapt_learning(ai_result, learning_style):
     return {
         "materi": materi,
         "style": learning_style,
-        "recommendation": saran # Di app.py dipanggil 'recommendation'
+        "recommendation": saran 
     }

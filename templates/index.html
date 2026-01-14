@@ -1,248 +1,242 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Emotion-Aware Adaptive Learning</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian Adaptif AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+            min-height: 100vh; 
+            display: flex; align-items: center; justify-content: center; 
+            padding: 20px;
+        }
+        
+        .container { 
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            padding: 30px; border-radius: 32px; width: 100%; max-width: 1200px; 
+            display: grid; grid-template-columns: 1fr; gap: 30px; 
+            box-shadow: 0 25px 80px rgba(33, 150, 243, 0.2);
+        }
+        
+        @media(min-width: 992px) { .container { grid-template-columns: 1fr 1fr; } }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
+        /* Camera Section */
+        .camera-box { 
+            background: #000; border-radius: 24px; overflow: hidden; 
+            position: relative; aspect-ratio: 4/3; 
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 40px rgba(25, 118, 210, 0.3);
+        }
+        
+        video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        
+        .overlay { 
+            position: absolute; top: 16px; left: 16px; 
+            background: rgba(33, 150, 243, 0.9); color: white; 
+            padding: 8px 16px; border-radius: 50px; font-size: 12px; font-weight: 700; 
+            display: flex; align-items: center; gap: 8px; backdrop-filter: blur(4px);
+        }
+        
+        .dot { width: 10px; height: 10px; background: #fff; border-radius: 50%; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        
+        .btn-cam { 
+            margin-top: 20px; background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white; border: none; padding: 16px; border-radius: 16px; 
+            cursor: pointer; width: 100%; font-weight: 700; font-size: 15px; 
+            transition: transform 0.2s; box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+        }
+        .btn-cam:hover { transform: translateY(-3px); }
 
-    .container {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      padding: 48px 40px;
-      max-width: 480px;
-      width: 100%;
-      backdrop-filter: blur(10px);
-    }
+        /* Form Section */
+        h2 { 
+            color: #1565c0; font-size: 32px; font-weight: 800; margin-bottom: 10px;
+        }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 8px; color: #1565c0; text-transform: uppercase; }
+        
+        input, select { 
+            width: 100%; padding: 14px; border: 2px solid #e3f2fd; 
+            border-radius: 14px; font-size: 15px; background: #f5faff; transition: 0.3s;
+        }
+        input:focus, select:focus { outline: none; border-color: #2196f3; background: white; }
 
-    .header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
+        /* Quiz Area */
+        #quiz-area { 
+            display: none; background: #f5faff; padding: 24px; 
+            border-radius: 20px; border: 2px solid #bbdefb; margin-top: 20px;
+        }
+        .q-item { 
+            background: white; padding: 20px; border-radius: 16px; 
+            margin-bottom: 15px; box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1); 
+        }
+        .question-text { font-weight: 600; margin-bottom: 12px; color: #263238; }
 
-    .icon {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-      font-size: 40px;
-      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
-    }
+        .btn-submit { 
+            width: 100%; padding: 18px; background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white; border: none; border-radius: 16px; font-weight: 800; font-size: 16px; 
+            cursor: pointer; margin-top: 25px; transition: transform 0.2s;
+        }
+        .btn-submit:hover { transform: translateY(-3px); }
 
-    h1 {
-      color: #2d3748;
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      color: #718096;
-      font-size: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 24px;
-    }
-
-    label {
-      display: block;
-      color: #4a5568;
-      font-weight: 600;
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 14px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      font-size: 15px;
-      color: #2d3748;
-      background: white;
-      transition: all 0.3s ease;
-      outline: none;
-    }
-
-    input:focus, select:focus {
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    input::placeholder {
-      color: #a0aec0;
-    }
-
-    select {
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a5568' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-      padding-right: 40px;
-    }
-
-    select option[value=""] {
-      color: #a0aec0;
-    }
-
-    button {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    }
-
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
-    .style-options {
-      display: grid;
-      gap: 12px;
-    }
-
-    .style-card {
-      display: flex;
-      align-items: center;
-      padding: 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      background: white;
-    }
-
-    .style-card:hover {
-      border-color: #667eea;
-      background: #f7fafc;
-    }
-
-    .style-card input[type="radio"] {
-      width: auto;
-      margin-right: 12px;
-      accent-color: #667eea;
-    }
-
-    .style-info {
-      flex: 1;
-    }
-
-    .style-name {
-      font-weight: 600;
-      color: #2d3748;
-      margin-bottom: 4px;
-    }
-
-    .style-desc {
-      font-size: 13px;
-      color: #718096;
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 32px 24px;
-      }
-
-      h1 {
-        font-size: 24px;
-      }
-    }
-  </style>
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 40px; border-radius: 28px; text-align: center; width: 90%; max-width: 450px; animation: popUp 0.4s; }
+        .close-btn { background: #2196f3; color: white; border: none; padding: 12px 30px; border-radius: 12px; cursor: pointer; margin-top: 20px; font-weight: bold; }
+        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <div class="icon">🧠</div>
-      <h1>Emotion-Aware Adaptive Learning</h1>
-      <p class="subtitle">Mari mulai perjalanan belajar yang menyenangkan</p>
+
+<div class="container">
+    <div class="camera-section">
+        <div class="camera-box">
+            <video id="videoElement" autoplay playsinline muted></video>
+            <div class="overlay"><div class="dot"></div> AI MONITORING</div>
+        </div>
+        <button class="btn-cam" type="button" onclick="startCamera()">🎥 Klik untuk Nyalakan Kamera</button>
+        <p style="text-align: center; font-size: 12px; color: #546e7a; margin-top: 10px;">Pastikan wajah terlihat jelas</p>
     </div>
 
-    <form method="POST" action="{{ url_for('student.start') }}">
-      <div class="form-group">
-        <label for="name">Nama Panggilan</label>
-        <input 
-          type="text" 
-          id="name" 
-          name="name" 
-          placeholder="Masukkan nama panggilanmu" 
-          required
-        >
-      </div>
-
-      <div class="form-group">
-        <label for="grade">Tingkat Kelas</label>
-        <select id="grade" name="grade" required>
-          <option value="">Pilih tingkat kelas</option>
-          <option value="SD">SD (Sekolah Dasar)</option>
-          <option value="SMP">SMP (Sekolah Menengah Pertama)</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Gaya Belajar</label>
-        <div class="style-options">
-          <label class="style-card">
-            <input type="radio" name="style" value="visual" required>
-            <div class="style-info">
-              <div class="style-name">👁️ Visual</div>
-              <div class="style-desc">Belajar dengan gambar dan diagram</div>
+    <div class="form-section">
+        <h2>Ujian Adaptif AI</h2>
+        <p style="margin-bottom: 25px; color: #546e7a;">Sistem ujian dengan analisis emosi real-time</p>
+        
+        <form method="POST" id="examForm">
+            <input type="hidden" name="face_image" id="faceInput">
+            
+            <div class="form-group">
+                <label>Nama Lengkap</label>
+                <input type="text" name="name" placeholder="Masukkan nama lengkap Anda" required>
             </div>
-          </label>
 
-          <label class="style-card">
-            <input type="radio" name="style" value="auditory" required>
-            <div class="style-info">
-              <div class="style-name">👂 Auditori</div>
-              <div class="style-desc">Belajar dengan mendengar</div>
+            <div class="form-group">
+                <label>Jenjang Kelas</label>
+                <select name="grade" id="gradeSelect" onchange="loadQuestions()" required>
+                    <option value="">-- Pilih Kelas --</option>
+                    <option value="SD">SD (Sekolah Dasar)</option>
+                    <option value="SMP">SMP (Sekolah Menengah)</option>
+                </select>
             </div>
-          </label>
 
-          <label class="style-card">
-            <input type="radio" name="style" value="kinesthetic" required>
-            <div class="style-info">
-              <div class="style-name">✋ Kinestetik</div>
-              <div class="style-desc">Belajar dengan praktik langsung</div>
+            <div id="quiz-area">
+                <h3>📝 Soal Latihan</h3>
+                <div id="questions-list"></div>
             </div>
-          </label>
-        </div>
-      </div>
 
-      <button type="submit">Mulai Belajar 🚀</button>
-    </form>
-  </div>
+            <button type="submit" class="btn-submit" id="submitBtn">Selesai & Analisis 🚀</button>
+        </form>
+    </div>
+</div>
+
+{% if result %}
+<div class="modal" style="display: flex;" id="resModal">
+    <div class="modal-content">
+        <h1 style="font-size: 60px; margin-bottom: 10px;">
+            {% if 'Senang' in result.emotion %}😄{% elif 'Netral' in result.emotion %}😐{% else %}😰{% endif %}
+        </h1>
+        <h3 style="color: #1565c0; margin-bottom: 10px;">Hasil Analisis</h3>
+        <p style="font-size: 18px; margin-bottom: 10px;"><strong>Emosi:</strong> {{ result.emotion }}</p>
+        <p style="color: #546e7a; line-height: 1.5;">{{ result.feedback }}</p>
+        <button class="close-btn" onclick="document.getElementById('resModal').style.display='none'">Tutup</button>
+    </div>
+</div>
+{% endif %}
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<script>
+    // --- PERBAIKAN PENTING ---
+    // Jangan gunakan JSON.parse dengan tanda kutip. Gunakan langsung variabel Jinja2
+    const allQuestions = {{ questions_json | safe }}; 
+    
+    console.log("Status Data:", allQuestions);
+
+    // 1. LOGIKA LOAD SOAL
+    function loadQuestions() {
+        const grade = document.getElementById('gradeSelect').value;
+        const quizArea = document.getElementById('quiz-area');
+        const qList = document.getElementById('questions-list');
+
+        if (!grade) {
+            quizArea.style.display = 'none';
+            return;
+        }
+
+        // Filter soal
+        const filtered = allQuestions.filter(q => q.grade === grade);
+        
+        if (filtered.length === 0) {
+            alert("⚠️ Tidak ada soal ditemukan untuk kelas " + grade + ". Cek file CSV!");
+            return;
+        }
+
+        // Acak dan Ambil 3
+        const shuffled = filtered.sort(() => 0.5 - Math.random()).slice(0, 3);
+        
+        qList.innerHTML = '';
+        shuffled.forEach((q, idx) => {
+            qList.innerHTML += `
+                <div class="q-item">
+                    <div class="question-text">${idx+1}. ${q.question}</div>
+                    <input type="hidden" name="q${idx+1}_text" value="${q.question}">
+                    <select name="ans${idx+1}" required>
+                        <option value="">- Pilih Jawaban -</option>
+                        <option value="${q.opt_a}">${q.opt_a}</option>
+                        <option value="${q.opt_b}">${q.opt_b}</option>
+                        <option value="${q.opt_c}">${q.opt_c}</option>
+                    </select>
+                </div>
+            `;
+        });
+        quizArea.style.display = 'block';
+    }
+
+    // 2. KAMERA START
+    const video = document.getElementById('videoElement');
+    async function startCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 640 } });
+            video.srcObject = stream;
+            console.log("Kamera Aktif");
+        } catch (err) {
+            alert("Gagal Akses Kamera: " + err);
+        }
+    }
+    window.addEventListener('load', startCamera);
+
+    // 3. SUBMIT FORM
+    const form = document.getElementById('examForm');
+    const canvas = document.getElementById('canvas');
+    const faceInput = document.getElementById('faceInput');
+    const btn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        if(video.readyState >= 2) {
+            btn.innerHTML = "Menganalisis... ⏳";
+            btn.style.opacity = "0.7";
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0);
+            
+            faceInput.value = canvas.toDataURL('image/jpeg');
+            console.log("Foto diambil!");
+            
+            setTimeout(() => { form.submit(); }, 500);
+        } else {
+            alert("Kamera belum siap! Klik tombol 'Nyalakan Kamera'.");
+        }
+    });
+</script>
+
 </body>
 </html>

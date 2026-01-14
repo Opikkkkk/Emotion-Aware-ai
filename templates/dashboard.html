@@ -6,124 +6,82 @@
     <title>Dashboard Guru AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
             min-height: 100vh;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
+            padding: 24px;
         }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(33, 150, 243, 0.1) 0%, transparent 70%);
-            animation: float 25s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            50% { transform: translate(40px, -40px) rotate(180deg); }
-        }
-        
+
         .container { 
             max-width: 1400px; 
             margin: 0 auto;
-            position: relative;
-            z-index: 1;
         }
         
-        /* Header */
+        /* Header Styles */
         .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+            padding: 32px 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 30px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 25px 35px;
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(33, 150, 243, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            flex-wrap: wrap;
-            gap: 15px;
+            border: 1px solid rgba(255,255,255,0.5);
         }
-        
-        .header-content h1 { 
-            color: #1565c0;
-            font-weight: 800;
-            font-size: 28px;
-            margin: 0;
-            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+
+        .header h1 {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .header-subtitle {
-            color: #546e7a;
-            margin-top: 8px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .btn-logout { 
-            background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
-            color: white;
-            padding: 12px 28px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 14px;
-            box-shadow: 0 4px 16px rgba(239, 83, 80, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid transparent;
-            letter-spacing: 0.3px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-logout:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 24px rgba(239, 83, 80, 0.4);
-            border-color: rgba(255, 255, 255, 0.2);
+            font-weight: 800;
+            font-size: 32px;
         }
 
-        /* Stats Cards */
+        .btn-logout { 
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white; 
+            padding: 12px 28px; 
+            text-decoration: none; 
+            border-radius: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(42, 82, 152, 0.4);
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(42, 82, 152, 0.6);
+        }
+
+        /* Stats Grid */
         .stats-grid { 
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 24px; 
             margin-bottom: 30px;
         }
-        
+
         .card { 
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 30px;
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(33, 150, 243, 0.12);
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            padding: 28px; 
+            border-radius: 20px; 
+            text-align: center; 
+            box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+            border: 1px solid rgba(42, 82, 152, 0.1);
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
-        
+
         .card::before {
             content: '';
             position: absolute;
@@ -131,356 +89,270 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #2196f3, #1976d2);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
+            background: linear-gradient(90deg, #2a5298 0%, #1e3c72 100%);
         }
-        
+
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 40px rgba(33, 150, 243, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 32px rgba(42, 82, 152, 0.15);
         }
-        
-        .card:hover::before {
-            transform: scaleX(1);
-        }
-        
+
         .card h3 { 
-            font-size: 48px;
-            margin: 15px 0;
-            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            font-size: 44px; 
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin: 12px 0;
             font-weight: 800;
-            line-height: 1;
         }
-        
-        .card p { 
-            color: #546e7a;
+
+        .card p {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Table Container */
+        .table-container {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            overflow: hidden;
+            border: 1px solid rgba(42, 82, 152, 0.1);
+        }
+
+        table { 
+            width: 100%; 
+            background: transparent;
+            border-collapse: separate; 
+            border-spacing: 0;
+        }
+
+        th { 
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white; 
+            padding: 18px 20px; 
+            text-align: left; 
             font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 10px;
+            letter-spacing: 0.8px;
         }
-        
-        .card-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
-            opacity: 0.8;
-        }
-        
-        /* Progress Bars Section */
-        .analytics-box { 
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 35px;
-            border-radius: 24px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(33, 150, 243, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .analytics-box h4 { 
-            margin-top: 0;
-            color: #1565c0;
-            margin-bottom: 25px;
-            font-size: 18px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .bar-container { 
-            margin-bottom: 20px;
-            padding: 15px;
-            background: linear-gradient(135deg, #f5faff 0%, #e3f2fd 100%);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .bar-container:hover {
-            transform: translateX(8px);
-            box-shadow: 0 4px 16px rgba(33, 150, 243, 0.1);
-        }
-        
-        .bar-label { 
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #263238;
-        }
-        
-        .bar-label span:last-child {
-            color: #1976d2;
-        }
-        
-        .progress-bg { 
-            background: rgba(255, 255, 255, 0.6);
-            height: 12px;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .progress-fill { 
-            height: 100%;
-            border-radius: 20px;
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
-        /* Warna Progress Bar */
-        .fill-positive { background: linear-gradient(90deg, #66bb6a 0%, #43a047 100%); }
-        .fill-warning { background: linear-gradient(90deg, #ffa726 0%, #fb8c00 100%); }
-        .fill-negative { background: linear-gradient(90deg, #ef5350 0%, #e53935 100%); }
 
-        /* Table */
-        .table-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(33, 150, 243, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .table-wrapper {
-            overflow-x: auto;
-        }
-        
-        table { 
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1000px;
-        }
-        
-        th { 
-            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
-            color: white;
-            padding: 20px;
-            text-align: left;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
         td { 
-            padding: 20px;
-            border-bottom: 1px solid #e3f2fd;
-            font-size: 14px;
-            color: #263238;
+            padding: 20px; 
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px; 
+            vertical-align: top;
+            color: #334155;
         }
-        
-        tbody tr {
-            transition: all 0.3s ease;
-        }
-        
-        tbody tr:hover { 
-            background: linear-gradient(135deg, #e3f2fd 0%, #f5faff 100%);
-            transform: scale(1.01);
-            box-shadow: 0 4px 16px rgba(33, 150, 243, 0.1);
-        }
-        
-        tbody tr:last-child td {
+
+        tr:last-child td {
             border-bottom: none;
         }
+
+        tr:hover td { 
+            background: linear-gradient(90deg, #f8fafc 0%, #f0f9ff 100%);
+        }
         
-        /* Badges */
+        /* Badge Styles */
         .badge { 
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-size: 11px;
+            padding: 6px 14px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            color: white; 
             font-weight: 700;
+            display: inline-block;
+            margin-top: 6px;
+        }
+
+        .sd { 
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .smp { 
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+        
+        /* Score Circle */
+        .score-circle { 
+            display: inline-block; 
+            width: 50px; 
+            height: 50px; 
+            line-height: 50px; 
+            text-align: center; 
+            border-radius: 50%; 
+            font-weight: 800; 
             color: white;
-            display: inline-block;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
         }
-        
-        .badge-sd { 
-            background: linear-gradient(135deg, #42a5f5 0%, #2196f3 100%);
+
+        .score-circle:hover {
+            transform: scale(1.1);
         }
-        
-        .badge-smp { 
-            background: linear-gradient(135deg, #9575cd 0%, #7e57c2 100%);
+
+        .pass { 
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         }
-        
-        .score-box { 
-            font-weight: 800;
-            padding: 8px 14px;
-            border-radius: 12px;
-            display: inline-block;
-            font-size: 13px;
-            letter-spacing: 0.3px;
+
+        .fail { 
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
         }
-        
-        .score-high { 
-            color: #2e7d32;
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.2);
+
+        /* Recommendation Box */
+        .rec-box { 
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b; 
+            padding: 12px 14px; 
+            font-size: 13px; 
+            color: #78350f;
+            border-radius: 10px;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
         }
-        
-        .score-med { 
-            color: #ef6c00;
-            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-            box-shadow: 0 2px 8px rgba(239, 108, 0, 0.2);
-        }
-        
-        .score-low { 
-            color: #c62828;
-            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-            box-shadow: 0 2px 8px rgba(198, 40, 40, 0.2);
-        }
-        
-        .timestamp {
-            color: #90a4ae;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        
+
+        /* Student Name */
         .student-name {
             font-weight: 700;
-            color: #263238;
+            color: #1e293b;
             font-size: 15px;
+            margin-bottom: 4px;
         }
-        
-        .emotion-display {
-            font-weight: 600;
-            color: #1565c0;
-        }
-        
-        .raw-emotion {
-            font-size: 10px;
-            color: #90a4ae;
-            margin-top: 4px;
+
+        /* Timestamp */
+        .timestamp {
+            color: #94a3b8;
+            font-size: 12px;
             font-weight: 500;
         }
-        
-        .quiz-detail {
-            font-size: 12px;
-            max-width: 300px;
+
+        /* Emotion Label */
+        .emotion-label {
+            font-weight: 600;
+            color: #475569;
+            font-size: 13px;
         }
-        
-        .quiz-detail div {
-            margin-bottom: 6px;
-            line-height: 1.5;
+
+        .emotion-tag {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
-        .quiz-detail b {
-            color: #1976d2;
+
+        /* Answer Detail */
+        .answer-item {
+            margin-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 10px;
+            background: linear-gradient(90deg, #f8fafc 0%, #ffffff 100%);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .answer-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .answer-item b {
+            color: #1e293b;
+        }
+
+        .answer-status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
             font-weight: 700;
+            margin-left: 4px;
         }
-        
-        .no-quiz {
-            color: #ef5350;
-            font-weight: 600;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #546e7a;
-        }
-        
-        .empty-state-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-        
-        .empty-state-text {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1565c0;
-        }
-        
+
         /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-            
+        @media (max-width: 1024px) {
             .header {
-                padding: 20px;
                 flex-direction: column;
-                align-items: flex-start;
+                gap: 20px;
+                text-align: center;
             }
-            
-            .header-content h1 {
-                font-size: 22px;
-            }
-            
-            .btn-logout {
-                width: 100%;
-                justify-content: center;
-            }
-            
+
             .stats-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 16px;
             }
-            
-            .card {
-                padding: 25px;
-            }
-            
-            .card h3 {
-                font-size: 42px;
-            }
-            
-            .analytics-box {
-                padding: 25px;
-            }
-            
-            th, td {
-                padding: 15px 12px;
-                font-size: 13px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .header-content h1 {
-                font-size: 20px;
-            }
-            
+
             .card h3 {
                 font-size: 36px;
             }
-            
-            .analytics-box h4 {
-                font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
             }
-            
-            .bar-label {
+
+            .header {
+                padding: 24px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 800px;
+            }
+
+            th, td {
+                padding: 12px;
                 font-size: 12px;
             }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .score-circle {
+                width: 44px;
+                height: 44px;
+                line-height: 44px;
+                font-size: 14px;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card, .table-container {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -488,117 +360,69 @@
 
 <div class="container">
     <div class="header">
-        <div class="header-content">
-            <h1>📊 Dashboard Guru AI</h1>
-            <p class="header-subtitle">Monitoring Kondisi Psikologis & Kognitif Siswa</p>
-        </div>
-        <a href="/logout" class="btn-logout">
-            <span>🚪</span> Logout
-        </a>
+        <h1>📊 Dashboard Guru AI</h1>
+        <a href="/logout" class="btn-logout">Logout</a>
     </div>
 
     <div class="stats-grid">
-        <div class="card">
-            <div class="card-icon">👥</div>
-            <h3>{{ stats.total }}</h3>
-            <p>Total Siswa</p>
-        </div>
-        <div class="card">
-            <div class="card-icon">🎯</div>
-            <h3>{{ stats.avg_focus }}%</h3>
-            <p>Rata-rata Fokus</p>
-        </div>
-        <div class="card">
-            <div class="card-icon">😊</div>
-            <h3 style="font-size: 28px; line-height: 1.5; margin-bottom: 0;">{{ stats.dominant_mood }}</h3>
-            <p style="margin-top: 10px;">Mood Dominan Kelas</p>
-        </div>
-    </div>
-
-    <div class="analytics-box">
-        <h4>📈 Distribusi Emosi & Kesiapan Belajar</h4>
-        
-        {% for emo, percent in stats.mood_percent.items() %}
-        <div class="bar-container">
-            <div class="bar-label">
-                <span>{{ emo }}</span>
-                <span>{{ percent }}%</span>
-            </div>
-            <div class="progress-bg">
-                <div class="progress-fill 
-                    {% if emo in ['Senang', 'Netral'] %}fill-positive
-                    {% elif emo in ['Terkejut'] %}fill-warning
-                    {% else %}fill-negative{% endif %}" 
-                    style="width: {{ percent }}%;">
-                </div>
-            </div>
-        </div>
-        {% else %}
-        <p style="text-align: center; color: #90a4ae; padding: 40px 0;">Belum ada data untuk dianalisis.</p>
-        {% endfor %}
+        <div class="card"><h3>{{ stats.total }}</h3><p>Total Siswa</p></div>
+        <div class="card"><h3>{{ stats.avg_score }}</h3><p>Rata-rata Nilai Kelas</p></div>
+        <div class="card"><h3>AI Active</h3><p>System Status</p></div>
     </div>
 
     <div class="table-container">
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>⏰ Waktu</th>
-                        <th>👤 Nama Siswa</th>
-                        <th>🎓 Kelas</th>
-                        <th>😊 Emosi Terdeteksi</th>
-                        <th>🎯 Skor Fokus</th>
-                        <th>📝 Detail Jawaban</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for log in logs %}
-                    <tr>
-                        <td class="timestamp">{{ log.timestamp }}</td>
-                        <td class="student-name">{{ log.name }}</td>
-                        <td>
-                            <span class="badge {% if log.grade == 'SD' %}badge-sd{% else %}badge-smp{% endif %}">
-                                {{ log.grade }}
+        <table>
+            <thead>
+                <tr>
+                    <th>Waktu</th>
+                    <th>Siswa</th>
+                    <th>Nilai & Emosi</th>
+                    <th width="30%">Rekomendasi Cerdas</th>
+                    <th width="30%">Detail Jawaban</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td class="timestamp">{{ log.timestamp }}</td>
+                    <td>
+                        <div class="student-name">{{ log.name }}</div>
+                        <span class="badge {% if log.grade == 'SD' %}sd{% else %}smp{% endif %}">{{ log.grade }}</span>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span class="score-circle {% if log.academic_score >= 60 %}pass{% else %}fail{% endif %}">
+                                {{ log.academic_score }}
                             </span>
-                        </td>
-                        <td>
-                            <div class="emotion-display">{{ log.emotion }}</div>
-                            <div class="raw-emotion">Raw: {{ log.raw_emotion }}</div>
-                        </td>
-                        <td>
-                            <span class="score-box 
-                                {% if log.focus_score >= 80 %}score-high
-                                {% elif log.focus_score >= 50 %}score-med
-                                {% else %}score-low{% endif %}">
-                                {{ log.focus_score }}%
-                            </span>
-                        </td>
-                        <td>
-                            <div class="quiz-detail">
-                                {% if log.quiz_detail %}
-                                    {% for k, v in log.quiz_detail.items() %}
-                                        <div><b>{{ k }}:</b> {{ v }}</div>
-                                    {% endfor %}
-                                {% else %}
-                                    <span class="no-quiz">Tidak mengerjakan kuis</span>
-                                {% endif %}
+                            <div>
+                                <div class="emotion-label">{{ log.emotion }}</div>
+                                <div class="emotion-tag">(Emosi)</div>
                             </div>
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="6">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">📭</div>
-                                <div class="empty-state-text">Belum ada data siswa yang masuk</div>
-                                <p style="font-size: 13px; margin-top: 8px; color: #90a4ae;">Data akan muncul setelah siswa menyelesaikan ujian</p>
+                        </div>
+                    </td>
+                    <td>
+                        {% if log.recommendation %}
+                        <div class="rec-box">💡 {{ log.recommendation }}</div>
+                        {% else %}
+                        <span style="color:#cbd5e1;">-</span>
+                        {% endif %}
+                    </td>
+                    <td style="font-size:12px;">
+                        {% if log.quiz_detail %}
+                            {% for k, v in log.quiz_detail.items() %}
+                            <div class="answer-item">
+                                <b>{{ k }}:</b> {{ v.q }}<br>
+                                <span style="color:#64748b;">Jawab: {{ v.user }} | {{ v.status }}</span>
                             </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="empty-state">Belum ada data.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 

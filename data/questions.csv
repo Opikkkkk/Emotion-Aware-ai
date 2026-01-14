@@ -1,21 +1,21 @@
-id,grade,question,opt_a,opt_b,opt_c
-1,SD,Hasil dari 15 + 8 adalah?,23,22,25
-2,SD,Hitung perkalian 6 x 5 = ?,30,35,40
-3,SD,Berapa hasil dari 50 dikurangi 25?,25,15,30
-4,SD,Sudut siku-siku besarnya ... derajat?,90,45,180
-5,SD,Bangun datar yang memiliki 3 sisi disebut?,Segitiga,Persegi,Lingkaran
-6,SD,Hasil pembagian 100 : 4 adalah?,25,20,50
-7,SD,1 Jam sama dengan berapa menit?,60,100,30
-8,SD,Pecahan 1/2 ditambah 1/2 hasilnya?,1,2,0
-9,SD,Keliling persegi dengan sisi 5 cm adalah?,20 cm,25 cm,10 cm
-10,SD,Lambang bilangan Romawi untuk angka 10?,X,V,L
-11,SMP,Jika 2x = 10, berapakah nilai x?,5,2,8
-12,SMP,Hasil dari 3 pangkat 2 adalah?,9,6,12
-13,SMP,Berapakah akar kuadrat dari 64?,8,6,7
-14,SMP,Rumus luas lingkaran adalah?,pi x r^2,2 x pi x r,p x l
-15,SMP,Hasil dari -5 + 12 adalah?,7,-7,17
-16,SMP,Total sudut dalam sebuah segitiga adalah?,180 derajat,360 derajat,90 derajat
-17,SMP,Penyelesaian dari 2(x + 3) = 10 adalah?,x = 2,x = 3,x = 5
-18,SMP,Peluang muncul angka 1 pada pelemparan dadu?,1/6,1/2,1/3
-19,SMP,Teorema Pythagoras berlaku pada segitiga?,Siku-siku,Sama kaki,Sembarang
-20,SMP,Volume kubus dengan sisi 2 cm adalah?,8 cm3,6 cm3,4 cm3
+id,grade,question,opt_a,opt_b,opt_c,correct
+1,SD,Hasil dari 15 + 8 adalah?,23,22,25,23
+2,SD,Hitung perkalian 6 x 5 = ?,30,35,40,30
+3,SD,Berapa hasil dari 50 dikurangi 25?,25,15,30,25
+4,SD,Sudut siku-siku besarnya ... derajat?,90,45,180,90
+5,SD,Bangun datar yang memiliki 3 sisi disebut?,Segitiga,Persegi,Lingkaran,Segitiga
+6,SD,Hasil pembagian 100 : 4 adalah?,25,20,50,25
+7,SD,1 Jam sama dengan berapa menit?,60,100,30,60
+8,SD,Pecahan 1/2 ditambah 1/2 hasilnya?,1,2,0,1
+9,SD,Keliling persegi dengan sisi 5 cm adalah?,20 cm,25 cm,10 cm,20 cm
+10,SD,Lambang bilangan Romawi untuk angka 10?,X,V,L,X
+11,SMP,Jika 2x = 10 berapakah nilai x?,5,2,8,5
+12,SMP,Hasil dari 3 pangkat 2 adalah?,9,6,12,9
+13,SMP,Berapakah akar kuadrat dari 64?,8,6,7,8
+14,SMP,Rumus luas lingkaran adalah?,pi x r^2,2 x pi x r,p x l,pi x r^2
+15,SMP,Hasil dari -5 + 12 adalah?,7,-7,17,7
+16,SMP,Total sudut dalam sebuah segitiga adalah?,180 derajat,360 derajat,90 derajat,180 derajat
+17,SMP,Penyelesaian dari 2(x + 3) = 10 adalah?,x = 2,x = 3,x = 5,x = 2
+18,SMP,Peluang muncul angka 1 pada pelemparan dadu?,1/6,1/2,1/3,1/6
+19,SMP,Teorema Pythagoras berlaku pada segitiga?,Siku-siku,Sama kaki,Sembarang,Siku-siku
+20,SMP,Volume kubus dengan sisi 2 cm adalah?,8 cm3,6 cm3,4 cm3,8 cm3
